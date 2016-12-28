@@ -24,11 +24,21 @@ package main
 
 import (
 	"fmt"
+	"net/url"
 	"os"
 )
 
-func parseURL(url string) {
-	// TODO
+func parseURL(urlString string) error {
+	u, err := url.Parse(urlString)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Path:", u.Path)
+	fmt.Println("Queries:")
+	for name, values := range u.Query() {
+		fmt.Println("-", name, "-->", values)
+	}
+	return nil
 }
 
 func validateArgs() {
@@ -45,5 +55,8 @@ func printUsage() {
 func main() {
 	validateArgs()
 	url := os.Args[1]
-	parseURL(url)
+	err := parseURL(url)
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
 }
